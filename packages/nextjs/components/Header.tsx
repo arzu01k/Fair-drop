@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { hardhat } from "viem/chains";
-import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, CommandLineIcon } from "@heroicons/react/24/outline";
+import { SwitchTheme } from "~~/components/SwitchTheme";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick, useTargetNetwork } from "~~/hooks/scaffold-eth";
 
@@ -17,13 +17,9 @@ type HeaderMenuLink = {
 
 export const menuLinks: HeaderMenuLink[] = [
   {
-    label: "Home",
-    href: "/",
-  },
-  {
-    label: "Debug Contracts",
-    href: "/debug",
-    icon: <BugAntIcon className="h-4 w-4" />,
+    label: "Dev",
+    href: "/dev",
+    icon: <CommandLineIcon className="h-4 w-4" />,
   },
 ];
 
@@ -53,9 +49,6 @@ export const HeaderMenuLinks = () => {
   );
 };
 
-/**
- * Site header
- */
 export const Header = () => {
   const { targetNetwork } = useTargetNetwork();
   const isLocalNetwork = targetNetwork.id === hardhat.id;
@@ -66,35 +59,45 @@ export const Header = () => {
   });
 
   return (
-    <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 shrink-0 justify-between z-20 shadow-md shadow-secondary px-0 sm:px-2">
-      <div className="navbar-start w-auto lg:w-1/2">
-        <details className="dropdown" ref={burgerMenuRef}>
-          <summary className="ml-1 btn btn-ghost lg:hidden hover:bg-transparent">
-            <Bars3Icon className="h-1/2" />
+    <div
+      className="sticky top-0 z-20 flex min-h-0 shrink-0 items-center justify-between border-b bg-base-100/80 px-3 py-3 backdrop-blur-md sm:px-5"
+      style={{ borderColor: "var(--bg-rim)" }}
+    >
+      <div className="flex items-center gap-4">
+        <details className="dropdown lg:hidden" ref={burgerMenuRef}>
+          <summary className="btn btn-ghost btn-sm hover:bg-transparent">
+            <Bars3Icon className="h-5 w-5" />
           </summary>
           <ul
-            className="menu menu-compact dropdown-content mt-3 p-2 shadow-sm bg-base-100 rounded-box w-52"
-            onClick={() => {
-              burgerMenuRef?.current?.removeAttribute("open");
-            }}
+            className="menu menu-compact dropdown-content mt-3 w-52 rounded-box bg-base-100 p-2 shadow-sm"
+            onClick={() => burgerMenuRef?.current?.removeAttribute("open")}
           >
             <HeaderMenuLinks />
           </ul>
         </details>
-        <Link href="/" passHref className="hidden lg:flex items-center gap-2 ml-4 mr-6 shrink-0">
-          <div className="flex relative w-10 h-10">
-            <Image alt="SE2 logo" className="cursor-pointer" fill src="/logo.svg" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-bold leading-tight">Scaffold-ETH</span>
-            <span className="text-xs">Ethereum dev stack</span>
+        <Link href="/" passHref className="flex shrink-0 items-center gap-3">
+          <span
+            className="flex h-8 w-8 items-center justify-center rounded-md"
+            style={{
+              backgroundColor: "var(--bg-brand)",
+              boxShadow: "0 0 16px var(--bg-glow-brand)",
+            }}
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="white" aria-hidden>
+              <path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z" />
+            </svg>
+          </span>
+          <div className="hidden flex-col leading-none sm:flex">
+            <span className="font-display text-sm font-bold tracking-wide">BLITZGUARD</span>
+            <span className="font-mono text-[10px] uppercase tracking-widest text-base-content/50">Humans win.</span>
           </div>
         </Link>
-        <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">
+        <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal gap-2 px-1">
           <HeaderMenuLinks />
         </ul>
       </div>
-      <div className="navbar-end grow mr-4">
+      <div className="flex items-center gap-2">
+        <SwitchTheme />
         <RainbowKitCustomConnectButton />
         {isLocalNetwork && <FaucetButton />}
       </div>
